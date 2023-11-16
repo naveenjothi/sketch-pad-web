@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width,
+       maximum-scale=0.9,user-scalable=0"
+    />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>Sketch Pad</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="content">
+      <h1>Sketch Pad</h1>
+      <div>
+        <input id="student" type="text" placeholder="type your name" />
+        <span id="instructions"></span>
+        <button id="advanceBtn" onclick="start();">START</button>
+      </div>
+      <br />
+      <div id="sketchPadContainer" style="visibility: hidden"></div>
+    </div>
+    <script src="js/sketchPad.js"></script>
+    <script src="js/draw.js"></script>
+    <script>
+      const sketchPad = new SketchPad(sketchPadContainer);
+      let currIndex = 0;
+      const allRequiredLabels = ["Car", "Fish", "House"];
+      const data = {
+        student: null,
+        session: new Date().getTime(),
+        drawings: {},
+      };
+      function start() {
+        if (student.value == "") {
+          alert("Please type your name first!");
+          return;
+        }
+        data.student = student.value;
+        student.style.display = "none";
+        sketchPadContainer.style.visibility = "visible";
+        const label = allRequiredLabels[currIndex];
+        instructions.innerHTML = "Please draw a " + label;
+        advanceBtn.innerHTML = "Next";
+        advanceBtn.onclick = next;
+      }
+
+      function next() {
+        const paths = sketchPad.paths;
+        if (!paths.length) {
+          alert("Please draw something!");
+        }
+        const key = allRequiredLabels[currIndex];
+        data.drawings[key] = paths;
+        sketchPad.reset();
+        currIndex++;
+        if (allRequiredLabels.length > currIndex) {
+          advanceBtn.disabled = false;
+          const nextLabel = allRequiredLabels[currIndex];
+          instructions.innerHTML = "Please draw a " + nextLabel;
+        } else {
+          sketchPadContainer.style.visibility = "hidden";
+          instructions.innerHTML = "Thank you!";
+          advanceBtn.innerHTML = "SAVE";
+          advanceBtn.onclick = save;
+        }
+      }
+
+      function save() {}
+    </script>
+    <!-- <script src="js/draw.js"></script> -->
+  </body>
+</html>
